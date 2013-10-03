@@ -485,9 +485,15 @@
 				args[i] = arguments[i];
 			}
 			var m = moment.apply(null, args);
-			var preTzOffset = m.zone();
-			m.tz(arguments[len]);
-			return m.add('minutes', m.zone() - preTzOffset);
+                        var u = moment.utc.apply(null, args);
+                        if (m.valueOf() - u.valueOf() !== 0) {
+                            var preTzOffset = m.zone();
+                            m.tz(arguments[len]);
+                            m.add('minutes', m.zone() - preTzOffset);
+                        } else {
+                            m.tz(arguments[len]);
+                        }
+                        return m
 		};
 
 		moment.tz.add = add;
